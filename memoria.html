@@ -1,0 +1,47 @@
+<html>
+  <head>
+    <script crossorigin src="https://unpkg.com/react@17/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.24.0/babel.js"></script>
+  </head>
+  <body style="background-color: #585858;">
+    <div id="root"></div> 
+
+    <script type="text/babel">
+
+      const NavElement = (text) => {
+        console.log(text)
+        const style = {
+          backgroundColor: "#a39d9d",
+          width: "100%"
+        }
+          return(
+            <div>
+                <h1>text</h1>
+            </div>
+          )
+      }
+
+      const App = () => {
+
+        const atras = './atras.png'
+        const imagenes = ['./alice.png', './asuna.png', './eugeo.png', './kirito.png', './klein.png', './quinella.png', './sinon.png', './sugou.png']
+
+        const [refresh, setRefresh] = React.useState(false);
+        const [attempt, setAttempt] = React.useState(0);
+ 
+        return(
+          <div>
+            <NavElement text="Try again"/>
+          </div>
+        )
+      }
+
+     ReactDOM.render(
+         <App />,
+         document.getElementById('root')
+     )
+
+    </script>
+  </body>
+</html>
