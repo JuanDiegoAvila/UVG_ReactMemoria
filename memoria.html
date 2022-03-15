@@ -9,15 +9,33 @@
 
     <script type="text/babel">
 
-      const NavElement = (text) => {
-        console.log(text)
+      const Title = ({text}) => {
+
         const style = {
-          backgroundColor: "#a39d9d",
-          width: "100%"
+          width: "100%",
+          color: "white",
+          display:"flex",
+          justifyContent: "center",
+          fontSize: "60px"
         }
+
+        return(
+          <div>
+              <h1 style = {style} > {text} </h1>
+          </div>
+        )
+
+      }
+
+      const NavText = ({text}) => {
+
+          const style = {
+            color: "white",
+          }
+
           return(
             <div>
-                <h1>text</h1>
+              <h1 style = {style} > {text} </h1>
             </div>
           )
       }
@@ -32,7 +50,11 @@
  
         return(
           <div>
-            <NavElement text="Try again"/>
+            <Title text="Memoria"/>
+            <div style = {{display: "flex", justifyContent: "space-around", flexDirection: "row"}}>
+              <NavText text="Refrescar"/>
+              <NavText text= {"Intentos = "+attempt}/>
+            </div>
           </div>
         )
       }
