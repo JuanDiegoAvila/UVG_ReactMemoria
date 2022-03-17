@@ -27,12 +27,29 @@
 
       }
 
+      const Win = () => {
+
+        const style = {
+          position: 'absolute',
+          color: 'white'
+        }
+
+        return(
+          <div>
+            <h1 style = {style}> Has ganado! </h1>
+          </div>
+        )
+      }
+
       const Game = ({cards}) => {
 
         const imagenes = ['./alice.png', './asuna.png', './eugeo.png', './kirito.png', './klein.png', './quinella.png', './sinon.png', './sugou.png']
 
         const [attempt, setAttempt] = React.useState(0)
         const [flip, setFlip] = React.useState(cards.map(() => false))
+        const [correct, setCorrect] = React.useState(0)
+
+        const [flipped, setFlipped] = React.useState([null, false, null, false])
 
       
         const style = {
@@ -42,6 +59,45 @@
           gridRowGap : "20px",
           gridColumnGap : "20px"
         }
+
+        React.useEffect(() => {
+
+            if(flipped[1] === true && flipped[3] === true){
+
+              if(cards[flipped[0]] === cards [flipped[2]]){
+
+                setCorrect(correct + 2)
+                setFlipped(() => [null, false, null, false])
+
+              }else if((cards [flipped[0]] != cards [flipped[2]]) && (flipped[0] != null) && (flipped[2] != null)){
+
+                setTimeout(() => {
+                  setFlip(([...oldState]) => {
+                    oldState[flipped[0]] = false
+                    oldState[flipped[2]] = false
+                    return oldState 
+                  })
+
+                }, 1000)
+
+                setAttempt(attempt + 1)
+                setFlipped(() => [null, false, null, false])
+              }
+            }
+
+          }, [flip])
+
+          React.useEffect(() => {
+
+            if(correct === 16){
+                return(
+                  <div>
+                    <Win/>
+                  </div>  
+                )
+            }
+
+          }, [correct])
         
         return (
           <div>
@@ -55,7 +111,7 @@
 
             <div style = {{display: "flex", justifyContent: "center"}}>
               <div style = {style}>
-                {cards.map((c, i) => <Card key = {i} img={c} flip={flip[i]} setFlip= {setFlip} index = {i} />)}
+                {cards.map((c, i) => <Card key = {i} img={c} flip={flip[i]} setFlip= {setFlip} index = {i} flipped ={flipped} setFlipped = {setFlipped}/>)}
               </div>
             </div>
             
@@ -65,7 +121,7 @@
 
       }
 
-      const Card = ({img, flip, setFlip, index}) => {
+      const Card = ({img, flip, setFlip, index, flipped, setFlipped}) => {
 
         const url = flip ? img : "./atras.png";
 
@@ -79,10 +135,26 @@
         }
 
         return(
-          <div style={{...style, transform: flip ? 'rotateY(180deg)' : 'rotateY(0deg)' }} onClick = {() => setFlip(([...oldState]) => { 
-            oldState[index] = true
-            return oldState  
-          })}>
+          <div style={{...style, transform: flip ? 'rotateY(180deg)' : 'rotateY(0deg)' }} onClick = {() => {
+            setFlip(([...oldState]) => { 
+              oldState[index] = true
+              return oldState  
+            })
+
+            if(flipped[0] == null){
+              setFlipped(([...oldState]) => { 
+                oldState[0] = index
+                oldState[1] = true
+                return oldState  
+              })
+            }else if(flipped[2] == null) {
+              setFlipped(([...oldState]) => { 
+                oldState[2] = index
+                oldState[3] = true
+                return oldState  
+              })
+            }
+          }}>
           </div>
         )
       }
