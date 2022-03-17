@@ -1,0 +1,112 @@
+<html>
+  <head>
+    <script crossorigin src="https://unpkg.com/react@17/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.24.0/babel.js"></script>
+  </head>
+  <body style="background-color: #585858; background-image: url('background.png'); background-size: cover;">
+    <div id="root"></div> 
+
+    <script type="text/babel">
+
+      const Title = ({text}) => {
+
+        const style = {
+          width: "100%",
+          color: "white",
+          display:"flex",
+          justifyContent: "center",
+          fontSize: "60px"
+        }
+
+        return(
+          <div>
+              <h1 style = {style} > {text} </h1>
+          </div>
+        )
+
+      }
+
+      const Game = ({cards}) => {
+
+        const imagenes = ['./alice.png', './asuna.png', './eugeo.png', './kirito.png', './klein.png', './quinella.png', './sinon.png', './sugou.png']
+
+        const [attempt, setAttempt] = React.useState(0)
+        const [flip, setFlip] = React.useState(cards.map(() => false))
+
+      
+        const style = {
+          display: "grid",
+          gridTemplateColumns: "repeat(4, 230px)",
+          gridTemplateRows: "repeat(4, 300px)",
+          gridRowGap : "20px",
+          gridColumnGap : "20px"
+        }
+        
+        return (
+          <div>
+
+            <div style = {{display: "flex", justifyContent: "space-around", flexDirection: "row"}}>
+              <div  onClick = {() => { location.reload() }}>
+                <h1 style = {{color: "white"}}>Refrescar</h1>
+              </div>
+              <div> <h1 style = {{color: "white"}}>Attempt = {attempt}</h1> </div>
+            </div>
+
+            <div style = {{display: "flex", justifyContent: "center"}}>
+              <div style = {style}>
+                {cards.map((c, i) => <Card key = {i} img={c} flip={flip[i]} setFlip= {setFlip} index = {i} />)}
+              </div>
+            </div>
+            
+
+          </div>
+        )
+
+      }
+
+      const Card = ({img, flip, setFlip, index}) => {
+
+        const url = flip ? img : "./atras.png";
+
+        const style = {
+          backgroundImage: `url(${url})`,
+          backgroundSize: "cover",
+          backgroundRepeat: "no-repeat",
+          transition: 'all 1s ease-out',
+          width: '230px',
+          height: '300px'
+        }
+
+        return(
+          <div style={{...style, transform: flip ? 'rotateY(180deg)' : 'rotateY(0deg)' }} onClick = {() => setFlip(([...oldState]) => { 
+            oldState[index] = true
+            return oldState  
+          })}>
+          </div>
+        )
+      }
+
+      const App = () => {
+
+        const back = './atras.png'
+        const imagenes = ['./alice.png', './asuna.png', './eugeo.png', './kirito.png', './klein.png', './quinella.png', './sinon.png', './sugou.png']
+
+        const cards = [...imagenes, ...imagenes].sort( () => .5 - Math.random() );
+
+        return(
+          <div>
+            <Title text="Memoria"/>
+            <Game cards = {cards}/>
+          </div>
+        )
+      }
+
+     ReactDOM.render(
+         <App />,
+         document.getElementById('root')
+     )
+
+    </script>
+  </body>
+</html>
