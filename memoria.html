@@ -171,10 +171,19 @@
 
         // cartas = [ todas las cartas, todas las cartas]
 
+        const style = {
+          display: "flex",
+          backgroundColor: "gray",
+          borderRadius: "30px",
+          justifyContent: "center",
+          color: "white"
+        }
+
         return(
           <div>
             <Title text="Memoria"/>
             <Game cards = {cards}/>
+            <a href = "https://github.com/JuanDiegoAvila/UVG_ReactMemoria" style = {style}>Repositorio de GitHub</a>
           </div>
         )
       }
