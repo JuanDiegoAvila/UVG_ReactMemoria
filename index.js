@@ -1,0 +1,183 @@
+const Title = ({text}) => {
+
+  const style = {
+    width: "100%",
+    color: "white",
+    display:"flex",
+    justifyContent: "center",
+    fontSize: "60px"
+  }
+
+  return(
+    <div>
+        <h1 style = {style} > {text} </h1>
+    </div>
+  )
+
+}
+
+const Win = () => {
+
+  const style = {
+    display: 'flex',
+    justifyContent: 'center',
+    color: 'white',
+    fontSize: '80px'
+  }
+
+  return(
+    <div>
+      <h1 style = {style}> Has ganado! </h1>
+    </div>
+  )
+}
+
+const Game = ({cards}) => {
+
+  const imagenes = ['./alice.png', './asuna.png', './eugeo.png', './kirito.png', './klein.png', './quinella.png', './sinon.png', './sugou.png']
+
+  const [attempt, setAttempt] = React.useState(0)
+  const [flip, setFlip] = React.useState(cards.map(() => false))
+  const [correct, setCorrect] = React.useState(0)
+  const [won, setWon] = React.useState(false)
+
+  const [flipped, setFlipped] = React.useState([null, false, null, false])
+
+  const style = {
+    display: "grid",
+    gridTemplateColumns: "repeat(6, 150px)",
+    gridTemplateRows: "repeat(4, 200px)",
+    gridRowGap : "20px",
+    gridColumnGap : "20px"
+  }
+
+  React.useEffect(() => {
+      if(flipped[1] === true && flipped[3] === true){
+
+        if(cards[flipped[0]] === cards [flipped[2]]){
+          setAttempt(attempt + 1)
+
+          setCorrect(correct + 2)
+          setFlipped(() => [null, false, null, false])
+
+        }else if((cards [flipped[0]] != cards [flipped[2]]) && (flipped[0] != null) && (flipped[2] != null)){
+
+          setTimeout(() => {
+            setFlip(([...oldState]) => {
+              oldState[flipped[0]] = false
+              oldState[flipped[2]] = false
+              return oldState 
+            })
+
+          }, 1000)
+
+          setAttempt(attempt + 1)
+          setFlipped(() => [null, false, null, false])
+        }
+      }
+
+    }, [flip])
+
+    React.useEffect(() => {
+
+      if(correct === 16){
+          setTimeout(() => { setWon(true)}, 1000)
+      }
+
+    }, [correct])
+  
+  return (
+      
+        <div>
+          <div style = {{display: "flex", justifyContent: "space-around", flexDirection: "row"}}>
+            <div  onClick = {() => { location.reload() }}>
+              <h1 style = {{color: "white"}}>Refrescar</h1>
+            </div>
+            <div> <h1 style = {{color: "white"}}>Attempt = {attempt}</h1> </div>
+          </div>
+          {
+
+            won ? <Win /> : 
+          
+            <div style = {{display: "flex", justifyContent: "center"}}>
+              <div style = {style}>
+                {cards.map((c, i) => <Card key = {i} img={c} flip={flip[i]} setFlip= {setFlip} index = {i} flipped ={flipped} setFlipped = {setFlipped}/>)}
+              </div>
+            </div>
+            
+          }
+
+        </div>
+
+  )
+
+}
+
+const Card = ({img, flip, setFlip, index, flipped, setFlipped}) => {
+
+  const url = flip ? img : "./atras.png";
+
+  const style = {
+    backgroundImage: `url(${url})`,
+    backgroundSize: "contain",
+    backgroundRepeat: "no-repeat",
+    transition: 'all 1s ease-out',
+    width: '100%',
+    height: '100%'
+  }
+
+  return(
+    <div style={{...style, transform: flip ? 'rotateY(180deg)' : 'rotateY(0deg)' }} onClick = {() => {
+      setFlip(([...oldState]) => { 
+        oldState[index] = true
+        return oldState  
+      })
+
+      if(flipped[0] == null){
+        setFlipped(([...oldState]) => { 
+          oldState[0] = index
+          oldState[1] = true
+          return oldState  
+        })
+      }else if(flipped[2] == null) {
+        setFlipped(([...oldState]) => { 
+          oldState[2] = index
+          oldState[3] = true
+          return oldState  
+        })
+      }
+    }}>
+    </div>
+  )
+}
+
+const App = () => {
+
+  const back = './atras.png'
+  const imagenes = ['./alice.png', './asuna.png', './eugeo.png', './kirito.png', './klein.png', './quinella.png', './sinon.png', './sugou.png']
+
+  const cards = [...imagenes, ...imagenes].sort( () => .5 - Math.random() );
+
+  // cartas = [ todas las cartas, todas las cartas]
+
+  const style = {
+    display: "flex",
+    backgroundColor: "gray",
+    borderRadius: "30px",
+    justifyContent: "center",
+    color: "white"
+  }
+
+  return(
+    <div>
+      <Title text="Memoria"/>
+      <Game cards = {cards}/>
+      <a href = "https://github.com/JuanDiegoAvila/UVG_ReactMemoria" style = {style}>Repositorio de GitHub</a>
+    </div>
+  )
+}
+
+ReactDOM.render(
+   <App />,
+   document.getElementById('root')
+)
